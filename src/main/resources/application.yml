@@ -14,8 +14,6 @@ spring:
           auth: true
           starttls:
             enable: true
-
-
 eureka:
   client:
     register-with-eureka: true
@@ -26,9 +24,6 @@ eureka:
     prefer-ip-address: true
     hostname: ${HOSTNAME:localhost}
     instance-id: ${spring.application.name}:${random.value}
-
-
-
 server:
   port: 9005
 
