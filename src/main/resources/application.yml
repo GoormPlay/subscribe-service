@@ -25,6 +25,6 @@ eureka:
     hostname: ${HOSTNAME:localhost}
     instance-id: ${spring.application.name}:${random.value}
 server:
-  port: 9005
+  port: ${SPRING_SERVER_PORT:8085}
 
 #?db 9000, 3306

@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: subscribe-service
+  namespace: subscribe
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: subscribe-service
+  template:
+    metadata:
+      labels:
+        app: subscribe-service
+    spec:
+      containers:
+        - name: subscribe-service
+          image: roin09/subscribe-service:latest
+          ports:
+            - containerPort: 8085
+          envFrom:
+            - configMapRef:
+                name: subscribe-service-config
+            - secretRef:
+                name: subscribe-service-secret
