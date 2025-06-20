@@ -6,9 +6,6 @@ import com.goormplay.subscribeservice.subscribe.exception.Subscribe.SubscribeExc
 import com.goormplay.subscribeservice.subscribe.repository.SubscribeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +20,7 @@ import static com.goormplay.subscribeservice.subscribe.exception.Subscribe.Subsc
 public class SubscribesServiceImpl implements SubscribeService{
 
     private final SubscribeRepository subscribeRepository;
-    private JavaMailSender mailSender;
+
 
 
 
@@ -77,39 +74,5 @@ public class SubscribesServiceImpl implements SubscribeService{
 
 
 
-
-
-
-    @Scheduled(cron = "@midnight")
-    protected void expireOldSubscriptions() {
-        log.info("Subscribe Service :  구독 스케줄러");
-        LocalDate today = LocalDate.now();
-        LocalDate nextMonth = today.plusMonths(1);
-
-        boolean success = false;
-        int retryCount = 0;
-        int maxRetries = 3;
-
-        while (!success && retryCount < maxRetries) {
-            try {
-                subscribeRepository.extendSubscriptions(nextMonth, today);
-                success = true;
-            } catch (Exception e) {
-                retryCount++;
-                if (retryCount == maxRetries) {
-                    log.error("Subscribe Service :  구독 스케줄러 실패");
-                    sendFailureEmail("구독 스케줄러 실패", "구독 스케줄러가 3회 연속 실패했습니다.");
-                }
-            }
-        }
-    }
-
-    private void sendFailureEmail(String subject, String text) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo("admin@goormplay.com");
-        message.setSubject(subject);
-        message.setText(text);
-        mailSender.send(message);
-    }
 
  }
